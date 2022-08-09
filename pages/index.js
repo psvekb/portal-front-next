@@ -2,8 +2,11 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -19,6 +22,10 @@ export default function Home() {
           <Link href="/systemRequirement">
             <a>Start configure system </a>
           </Link>
+
+          <button onClick={() => router.push("/about")}>
+            Click here to read more
+          </button>
         </p>
       </main>
 

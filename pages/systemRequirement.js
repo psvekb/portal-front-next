@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function SystemRequirement() {
   const [count, setCount] = useState(0);
@@ -6,11 +7,13 @@ export default function SystemRequirement() {
   const [upsFullPower, setUpsFullPower] = useState("0");
   const [upsPowerFactor, setUpsPowerFactor] = useState("1");
   const [requestedTime, setRequestedTime] = useState("5");
+  const router = useRouter();
 
   function handleSubmit(event) {
     event.preventDefault();
     setCount(count + 1);
-    alert(count);
+    console.log("summit pressed ", count);
+    router.push("/systemReview");
   }
 
   function handleSetUpsFamily(event) {
@@ -132,7 +135,7 @@ export default function SystemRequirement() {
         </div>
         <hr />
         <div>
-          <button>Submit</button>
+          <button /*onClick={handleSubmit}*/>Submit</button>
         </div>
       </form>
     </div>
