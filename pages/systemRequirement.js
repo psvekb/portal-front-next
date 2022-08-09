@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { AppWrapper, useAppContext } from "../context/AppContext";
 
 export default function SystemRequirement() {
-  const [count, setCount] = useState(0);
+  const router = useRouter();
+  const [appState, setAppState] = useAppContext();
   const [upsFamily, setUpsFamily] = useState("E3M");
   const [upsFullPower, setUpsFullPower] = useState("0");
   const [upsPowerFactor, setUpsPowerFactor] = useState("1");
   const [requestedTime, setRequestedTime] = useState("5");
-  const router = useRouter();
 
   function handleSubmit(event) {
     event.preventDefault();
-    setCount(count + 1);
-    console.log("summit pressed ", count);
+
+    setAppState({
+      ...appState,
+      upsFamily: upsFamily,
+      upsFullPower: upsFullPower,
+      upsPowerFactor: upsPowerFactor,
+      requestedTime: requestedTime,
+    });
+
     router.push("/systemReview");
   }
 
