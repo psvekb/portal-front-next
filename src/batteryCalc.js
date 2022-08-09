@@ -1,48 +1,60 @@
 import pnList from "./pnList.js";
-const UPS_EFFICIENCY = 0.94; // КПД ИБП
-const KILO = 1000;
+import {
+  UPS_EFFICIENCY,
+  KILO,
+  BATTERY_INFO_START_INDEX,
+  BATTERY_INFO_END_INDEX,
+  BATTERY_POWER_START_INDEX,
+  BATTERY_POWER_END_INDEX,
+} from "./consts";
+// const UPS_EFFICIENCY = 0.94; // КПД ИБП
+// const KILO = 1000;
 
 // get from API in future
-const {
-  upsFamily,
-  upsFullPower,
-  loadPowerFactor,
-  redundancy,
-  actualLoadPercentage,
-  batteryRuntime,
-  batteryTypeAndPlacement,
-  ingressProtection,
-} = {
-  upsFamily: "E3M",
-  upsFullPower: 100, //kVA
-  loadPowerFactor: 0.8,
-  redundancy: "N",
-  actualLoadPercentage: 100, // %
-  batteryRuntime: 10, //min
-  batteryTypeAndPlacement: "racks",
-  ingressProtection: "IP20",
-};
+// const {
+//   upsFamily,
+//   upsFullPower,
+//   loadPowerFactor,
+//   redundancy,
+//   actualLoadPercentage,
+//   batteryRuntime,
+//   batteryTypeAndPlacement,
+//   ingressProtection,
+// } = {
+//   upsFamily: "E3M",
+//   upsFullPower: 100, //kVA
+//   loadPowerFactor: 0.8,
+//   redundancy: "N",
+//   actualLoadPercentage: 100, // %
+//   batteryRuntime: 10, //min
+//   batteryTypeAndPlacement: "racks",
+//   ingressProtection: "IP20",
+// };
 
 //put from API to client in future
-const { isxNumber } = { isxNumber: "ISX001000001-001" };
+// const { isxNumber } = { isxNumber: "ISX001000001-001" };
 
-const outputArray = ["U3MUPS100KH", "BC1100", "HF12-135W-X"];
-// console.log("output Array: ", outputArray);
+// const outputArray = ["U3MUPS100KH", "BC1100", "HF12-135W-X"];
+// // console.log("output Array: ", outputArray);
 
 const getBatteryPowertable = (pnList) => {
   const pnListArrayStrings = pnList.split(`\n`);
   const pnListArray = pnListArrayStrings.map((string) => string.split(";"));
-  const batteryInfoStartIndex = 41;
-  const batteryInfoEndIndex = batteryInfoStartIndex + 21;
-  const batteryPowerStartIndex = 8;
-  const batteryPowerEndIndex = batteryPowerStartIndex + 6;
+  const batteryInfoStartIndex = BATTERY_INFO_START_INDEX;
+  const batteryInfoEndIndex = BATTERY_INFO_END_INDEX;
+  const batteryPowerStartIndex = BATTERY_POWER_START_INDEX;
+  const batteryPowerEndIndex = BATTERY_POWER_END_INDEX;
 
   return pnListArray
     .slice(batteryInfoStartIndex, batteryInfoEndIndex)
     .map((row) => row.slice(batteryPowerStartIndex, batteryPowerEndIndex));
 };
 
-const getMinimumBatteryLength = (batteryPower, powerFromBattery) => {
+const getMinimumBatteryLength = (
+  batteryPower,
+  powerFromBattery,
+  batteryRuntime
+) => {
   let [batteryPrice, Rslope, Scal, Expo, Cap, Volt] = batteryPower;
   for (let strings = 1; strings <= 4; strings++) {
     for (let blockInString = 36; blockInString <= 50; blockInString += 2) {
@@ -71,11 +83,19 @@ const getMinimumBatteryLength = (batteryPower, powerFromBattery) => {
   return false;
 };
 
-const getBatteryVariantsTable = (batteryPowerTable, powerFromBattery) => {
+const getBatteryVariantsTable = (
+  batteryPowerTable,
+  powerFromBattery,
+  batteryRuntime
+) => {
   let batteryCalculatedLengthPriceTable = [];
   for (let i = 0; i < batteryPowerTable.length; i++) {
     let batteryPower = batteryPowerTable[i];
-    let search = getMinimumBatteryLength(batteryPower, powerFromBattery);
+    let search = getMinimumBatteryLength(
+      batteryPower,
+      powerFromBattery,
+      batteryRuntime
+    );
     if (search) {
       batteryCalculatedLengthPriceTable.push([i, ...search]);
     }
