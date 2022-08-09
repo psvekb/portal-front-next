@@ -6,9 +6,9 @@ export default function SystemRequirement() {
   const router = useRouter();
   const [appState, setAppState] = useAppContext();
   const [upsFamily, setUpsFamily] = useState("E3M");
-  const [upsFullPower, setUpsFullPower] = useState("0");
-  const [upsPowerFactor, setUpsPowerFactor] = useState("1");
-  const [requestedTime, setRequestedTime] = useState("5");
+  const [upsFullPower, setUpsFullPower] = useState("100");
+  const [loadPowerFactor, setUpsPowerFactor] = useState("1");
+  const [batteryRuntime, setRequestedTime] = useState("5");
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -16,9 +16,9 @@ export default function SystemRequirement() {
     setAppState({
       ...appState,
       upsFamily: upsFamily,
-      upsFullPower: upsFullPower,
-      upsPowerFactor: upsPowerFactor,
-      requestedTime: requestedTime,
+      upsFullPower: +upsFullPower,
+      loadPowerFactor: +loadPowerFactor,
+      batteryRuntime: +batteryRuntime,
     });
 
     router.push("/systemReview");
@@ -62,6 +62,7 @@ export default function SystemRequirement() {
             onChange={handleSetUpsFullPower}
             required
             size="5"
+            value={upsFullPower}
           />
           {" kVA " + upsFullPower}
         </div>
@@ -74,9 +75,9 @@ export default function SystemRequirement() {
             onChange={handleSetPowerFactor}
             required
             size="3"
-            value={upsPowerFactor}
+            value={loadPowerFactor}
           />
-          {" [0.6 .. 1.0] " + upsPowerFactor}
+          {" [0.6 .. 1.0] " + loadPowerFactor}
         </div>
         <div>
           Redundancy
@@ -116,7 +117,7 @@ export default function SystemRequirement() {
             size="5"
           />
           {" 100% "}
-          what is actual load {upsFullPower * upsPowerFactor} kW
+          what is actual load {upsFullPower * loadPowerFactor} kW
         </div>
         <div>
           Set requsted time in minutes
@@ -125,9 +126,9 @@ export default function SystemRequirement() {
             onChange={handleSetRequestedTime}
             required
             size="5"
-            value={requestedTime}
+            value={batteryRuntime}
           />
-          {" min " + requestedTime}
+          {" min " + batteryRuntime}
         </div>
         <hr />
         <h2>Environment</h2>

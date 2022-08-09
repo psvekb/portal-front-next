@@ -6,8 +6,8 @@ export function AppWrapper({ children }) {
   const [appState, setAppState] = useState({
     upsFamily: "E3M",
     upsFullPower: 0,
-    upsPowerFactor: 1,
-    requestedTime: 5,
+    loadPowerFactor: 1,
+    batteryRuntime: 5,
   });
   const contextValue = useMemo(() => {
     return [appState, setAppState];
